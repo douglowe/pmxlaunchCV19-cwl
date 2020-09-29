@@ -1,0 +1,24 @@
+# MD-setup CWL workflow with BioExcel building blocks - input YAML configuration file
+#
+# based on workflows/CV19_MD/md_muts_sets.yaml in https://github.com/bioexcel/pmxlaunchCV19/
+
+
+
+
+step2_pdb2gmx_config: '{"force_field":"amber99sb-ildn"}'
+
+step3_editconf_config: '{"box_type":"octahedron", "distance_to_molecule":1.2}'
+
+step5_grompp_genion_config: '{"mdp": {"type":"minimization", "nsteps":5000}}'
+
+step6_genion_config: '{"neutral":"True", "concentration":0.0}'
+
+step7_grompp_min_config: '{"mdp": {"type":"minimization", "nsteps":5000, "emtol":500}}'
+
+step9_grompp_nvt_config: '{"mdp": {"type":"nvt", "nsteps":5000}}'
+
+step11_grompp_npt_config: '{"mdp": {"type":"npt", "nsteps":5000}}'
+
+step13_grompp_md_config: '{"mdp": {"type":"free", "nsteps":500000}}'
+
+step14_mdrun_md_config: '{"mpi_bin":"mpirun", "gmx_path":"gmx_mpi"}'
