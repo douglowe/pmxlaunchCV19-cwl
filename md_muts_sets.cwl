@@ -4,7 +4,10 @@ cwlVersion: v1.0
 class: Workflow
 label: testing MD muts system
 doc: |
-  CWL impementation of the workflows/CV19_MD/md_muts_sets.py workflow
+  CWL impementation of the MD Mutations workflow
+  Based on the files: 
+          workflows/CV19_MD/md_muts_sets.py
+          workflows/CV19_MD/md_muts_sets.yaml
 
 inputs:
   step2_pdb2gmx_config: string
@@ -29,10 +32,10 @@ steps:
     doc: |
       this will need to: (a) build mutation list; (b) correct Histidine residues to HIE
       (might require splitting this step?)
-    run:
+    run: biobb/biobb_adapters/cwl/biobb_model/model/mutate.cwl
     in:
-      thingy: step1_mutate_path
-      thingy: step1_mutate_props
+      config: step1_mutate_props
+      input_pdb_path: step1_pdb_name
     out: [output_pdb_file]
 
   step2_pdb2gmx:
@@ -91,7 +94,7 @@ steps:
     run: biobb/biobb_adapters/cwl/biobb_md/gromacs/mdrun.cwl
     in:
       input_tpr_file: step7_grompp_min/output_tpr_file
-    out: [output_trr_file, output_gro_file, output_edr_file, output_log_file]
+    out: [output_trr_file, output_xtc_file, output_gro_file, output_edr_file, output_log_file]
     
   step9_grompp_nvt:
     label: preprocess system temperature equilibration
@@ -107,7 +110,7 @@ steps:
     run: biobb/biobb_adapters/cwl/biobb_md/gromacs/mdrun.cwl
     in:
       input_tpr_path: step9_grompp_nvt/output_tpr_file
-    out: [output_trr_file, output_gro_file, output_edr_file, output_log_file, output_cpt_file]
+    out: [output_trr_file, output_xtc_file, output_gro_file, output_edr_file, output_log_file, output_cpt_file]
 
   step11_grompp_npt:
     label: preprocess system pressure equilibration
@@ -116,20 +119,33 @@ steps:
       config: step11_grompp_npt_config
       input_gro_path: step10_mdrun_nvt/output_gro_file
       input_top_zip_path: step6_genion/output_top_zip_file
+      input_cpt_path: step10_mdrun_nvt/output_cpt_file
     out: [output_tpr_file]
 
   step12_mdrun_npt:
     label: execute system pressure equilibration
     run: biobb/biobb_adapters/cwl/biobb_md/gromacs/mdrun.cwl
     in:
-    out:
+      input_tpr_path: step11_grompp_npt/output_tpr_file
+    out: [output_trr_file, output_xtc_file, output_gro_file, output_edr_file, output_log_file, output_cpt_file]
+    
   step13_grompp_md:
     label: preprocess free dynamics
     run: biobb/biobb_adapters/cwl/biobb_md/gromacs/grompp.cwl
     in:
-    out:
+      config: step13_grompp_md_config
+      input_gro_path: step12_mdrun_npt/output_gro_file
+      input_top_zip_path: step6_genion/output_top_zip_file
+      input_cpt_path: step12_mdrun_npt/output_cpt_file
+    out: [output_tpr_file]
+    
   step14_mdrun_md:
     label: execute free molecular dynamics simulation
     run: biobb/biobb_adapters/cwl/biobb_md/gromacs/mdrun.cwl
     in:
-    out:
+      config: step14_mdrun_md_config
+      input_tpr_path: step13_grompp_md/output_tpr_file
+    out: [output_trr_file, output_xtc_file, output_gro_file, output_edr_file, output_log_file, output_cpt_file]
+
+
+

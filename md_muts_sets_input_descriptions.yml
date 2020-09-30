@@ -2,8 +2,11 @@
 #
 # based on workflows/CV19_MD/md_muts_sets.yaml in https://github.com/bioexcel/pmxlaunchCV19/
 
+#mutations: [['WT'],['A:Arg6Gln','A:Asn13Lys'],['A:Glu31Asn','A:Lys43Asn'],['A:Asp45Asn','A:Asn311Glu'],['A:Glu307Gln','A:Lys341Leu'],['A:Asp336Ala','A:Arg367Tyr'],['A:Asp366Ala','A:Arg582Gly'],['A:Thr3Ile'],['A:Asp5Glu'],['A:Ile9Thr'],['A:Ser22Phe'],['A:Ser369Ala'],['A:Tyr372Phe']]
 
+step1_pdb_name: 'wt.pdb'
 
+step1_mutate_config: '{"mutation_list":}'
 
 step2_pdb2gmx_config: '{"force_field":"amber99sb-ildn"}'
 
