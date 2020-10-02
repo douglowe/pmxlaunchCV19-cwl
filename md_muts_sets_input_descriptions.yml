@@ -6,7 +6,7 @@
 
 step1_pdb_name: 'wt.pdb'
 
-step1_mutate_config: '{"mutation_list":}'
+step1_mutate_config: '{"mutation_list": ["A:Arg6Gln","A:Asn13Lys"]}'
 
 step2_pdb2gmx_config: '{"force_field":"amber99sb-ildn"}'
 

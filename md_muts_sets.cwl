@@ -10,6 +10,8 @@ doc: |
           workflows/CV19_MD/md_muts_sets.yaml
 
 inputs:
+  step1_pdb_name: string
+  step1_mutate_config: string
   step2_pdb2gmx_config: string
   step3_editconf_config: string
   step5_grompp_genion_config: string
@@ -21,7 +23,10 @@ inputs:
   step14_mdrun_md_config: string
 
 outputs:
-
+  pdb:
+    type: File
+    outputSource: step1_mutate/output_pdb_file
+    
 
 
 
@@ -34,7 +39,7 @@ steps:
       (might require splitting this step?)
     run: biobb/biobb_adapters/cwl/biobb_model/model/mutate.cwl
     in:
-      config: step1_mutate_props
+      config: step1_mutate_config
       input_pdb_path: step1_pdb_name
     out: [output_pdb_file]
 
@@ -93,7 +98,7 @@ steps:
     label: execute energy minimization
     run: biobb/biobb_adapters/cwl/biobb_md/gromacs/mdrun.cwl
     in:
-      input_tpr_file: step7_grompp_min/output_tpr_file
+      input_tpr_path: step7_grompp_min/output_tpr_file
     out: [output_trr_file, output_xtc_file, output_gro_file, output_edr_file, output_log_file]
     
   step9_grompp_nvt:
